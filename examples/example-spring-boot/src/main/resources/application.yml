@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: example-spring-boot
+message:
+  hub:
+    dingtalk:
+      bot:
+        - alias: "dingtalk-bot-1"
+          secret: "****"
+          access-token: "*****"

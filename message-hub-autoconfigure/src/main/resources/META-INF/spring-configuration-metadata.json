@@ -1,0 +1,102 @@
+{
+  "groups": [
+    {
+      "name": "message.hub",
+      "type": "com.message.hub.autoconfigure.configuration.ChannelProperties",
+      "sourceType": "com.message.hub.autoconfigure.configuration.ChannelProperties"
+    },
+    {
+      "name": "message.hub.dingtalk",
+      "type": "com.message.hub.core.properties.DingtalkProperties",
+      "sourceType": "com.message.hub.autoconfigure.configuration.ChannelProperties"
+    },
+    {
+      "name": "message.hub.feishu",
+      "type": "com.message.hub.core.properties.FeishuProperties",
+      "sourceType": "com.message.hub.autoconfigure.configuration.ChannelProperties"
+    },
+    {
+      "name": "message.hub.mail",
+      "type": "com.message.hub.core.properties.MailProperties",
+      "sourceType": "com.message.hub.autoconfigure.configuration.ChannelProperties"
+    },
+    {
+      "name": "message.hub.weixin",
+      "type": "com.message.hub.core.properties.WeixinProperties",
+      "sourceType": "com.message.hub.autoconfigure.configuration.ChannelProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "message.channel.dingtalk.channels",
+      "type": "java.util.List<com.hub.message.properties.DingtalkProperties$Channel>",
+      "sourceType": "com.message.hub.core.properties.DingtalkProperties"
+    },
+    {
+      "name": "message.channel.dingtalk.robots",
+      "type": "java.util.List<com.hub.message.properties.DingtalkProperties$Robot>",
+      "sourceType": "com.message.hub.core.properties.DingtalkProperties"
+    },
+    {
+      "name": "message.channel.feishu.channels",
+      "type": "java.util.List<com.hub.message.properties.FeishuProperties$Channel>",
+      "sourceType": "com.message.hub.core.properties.FeishuProperties"
+    },
+    {
+      "name": "message.channel.feishu.robots",
+      "type": "java.util.List<com.hub.message.properties.FeishuProperties$Robot>",
+      "sourceType": "com.message.hub.core.properties.FeishuProperties"
+    },
+    {
+      "name": "message.channel.mail.smtp",
+      "type": "java.util.List<com.hub.message.properties.MailProperties$Smtp>",
+      "sourceType": "com.message.hub.core.properties.MailProperties"
+    },
+    {
+      "name": "message.channel.weixin.channels",
+      "type": "java.util.List<com.hub.message.properties.WeixinProperties$Channel>",
+      "sourceType": "com.message.hub.core.properties.WeixinProperties"
+    },
+    {
+      "name": "message.channel.weixin.robots",
+      "type": "java.util.List<com.hub.message.properties.WeixinProperties$Robot>",
+      "sourceType": "com.message.hub.core.properties.WeixinProperties"
+    },
+    {
+      "name": "message.hub.dingtalk.bot",
+      "type": "java.util.List<com.message.hub.core.properties.DingtalkProperties$Bot>",
+      "sourceType": "com.message.hub.core.properties.DingtalkProperties"
+    },
+    {
+      "name": "message.hub.dingtalk.chat",
+      "type": "java.util.List<com.message.hub.core.properties.DingtalkProperties$Chat>",
+      "sourceType": "com.message.hub.core.properties.DingtalkProperties"
+    },
+    {
+      "name": "message.hub.feishu.bot",
+      "type": "java.util.List<com.message.hub.core.properties.FeishuProperties$Bot>",
+      "sourceType": "com.message.hub.core.properties.FeishuProperties"
+    },
+    {
+      "name": "message.hub.feishu.chat",
+      "type": "java.util.List<com.message.hub.core.properties.FeishuProperties$Chat>",
+      "sourceType": "com.message.hub.core.properties.FeishuProperties"
+    },
+    {
+      "name": "message.hub.mail.smtp",
+      "type": "java.util.List<com.message.hub.core.properties.MailProperties$Smtp>",
+      "sourceType": "com.message.hub.core.properties.MailProperties"
+    },
+    {
+      "name": "message.hub.weixin.bot",
+      "type": "java.util.List<com.message.hub.core.properties.WeixinProperties$Bot>",
+      "sourceType": "com.message.hub.core.properties.WeixinProperties"
+    },
+    {
+      "name": "message.hub.weixin.chat",
+      "type": "java.util.List<com.message.hub.core.properties.WeixinProperties$Chat>",
+      "sourceType": "com.message.hub.core.properties.WeixinProperties"
+    }
+  ],
+  "hints": []
+}
