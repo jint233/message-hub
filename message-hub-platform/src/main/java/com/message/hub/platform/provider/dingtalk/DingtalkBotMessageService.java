@@ -87,8 +87,6 @@ public class DingtalkBotMessageService extends AbstractSendService<DingtalkPrope
      */
     private String execute(DingtalkProperties.Bot bot, OapiRobotSendRequest request) {
         try {
-            // @formatter:off
-            // 使用JSON.toJSONString序列化钉钉客户端执行结果为JSON字符串
             return JSON.toJSONString(
                     DingtalkUtils
                             .getBotClient(
@@ -96,7 +94,6 @@ public class DingtalkBotMessageService extends AbstractSendService<DingtalkPrope
                                     Objects.requireNonNull(bot.getSecret()))
                             .execute(request)
             );
-            // @formatter:on
         } catch (ApiException | NoSuchAlgorithmException | InvalidKeyException e) {
             log.error("dingtalk bot message send error", e);
             throw new DingtalkMessageException(e.getMessage(), e);

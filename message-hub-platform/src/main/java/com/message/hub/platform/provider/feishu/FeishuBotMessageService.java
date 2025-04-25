@@ -37,17 +37,14 @@ public class FeishuBotMessageService extends AbstractSendService<FeishuPropertie
         // 将Markdown内容转换为飞书机器人可接受的格式列表
         List<FeishuUtils.BotRequest.PostContentDetail> list = FeishuUtils.toPost(context);
 
-        // @formatter:off
         // 为消息添加@别名的功能
         context.getContentParams(bot.getAlias()).getFeishuRobot()
-                .forEach((key,value) ->
+                .forEach((key, value) ->
                         list.add(new FeishuUtils.BotRequest.PostContentDetail("at", null, null, key, (String) value)));
-        // @formatter:on
 
         // 获取当前时间戳，用于消息签名
         Long timestamp = System.currentTimeMillis();
         try {
-            // @formatter:off
             // 构建并发送消息到飞书机器人
             return FeishuUtils.feishuBot(
                     bot.getHookId(),
@@ -56,7 +53,6 @@ public class FeishuBotMessageService extends AbstractSendService<FeishuPropertie
                             .withPost(context.getTitle(), list)
                             .build()
             );
-            // @formatter:on
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             log.error("feishu bot markdown message send error", e);
             throw new FeishuMessageException(e.getMessage(), e);
@@ -77,7 +73,6 @@ public class FeishuBotMessageService extends AbstractSendService<FeishuPropertie
     public String sendText(FeishuProperties.Bot bot, TextContext context) {
         Long timestamp = System.currentTimeMillis();
         try {
-            // @formatter:off
             // 构建并发送自定义机器人消息请求，其中包含消息的文本内容。
             return FeishuUtils.feishuBot(
                     bot.getHookId(),
@@ -93,7 +88,6 @@ public class FeishuBotMessageService extends AbstractSendService<FeishuPropertie
                                                     + context.getText())
                             ).build()
             );
-            // @formatter:on
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             log.error("feishu bot text message send error", e);
             throw new FeishuMessageException(e.getMessage(), e);

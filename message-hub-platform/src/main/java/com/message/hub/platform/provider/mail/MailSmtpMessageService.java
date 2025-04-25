@@ -28,7 +28,6 @@ public class MailSmtpMessageService extends AbstractSendService<MailProperties.S
      */
     @Override
     public String sendMarkdown(MailProperties.Smtp smtp, MarkdownContext context) {
-        // @formatter:off
         // 根据别名获取邮件接收者地址，将Markdown内容转换为HTML格式，并发送邮件
         return mail(
                 smtp,
@@ -36,7 +35,6 @@ public class MailSmtpMessageService extends AbstractSendService<MailProperties.S
                 context.getTitle(),
                 ContentUtils.toHTML(context)
         );
-        // @formatter:on
     }
 
     /**
@@ -51,7 +49,6 @@ public class MailSmtpMessageService extends AbstractSendService<MailProperties.S
      */
     @Override
     public String sendText(MailProperties.Smtp smtp, TextContext context) {
-        // @formatter:off
         // 从context中获取邮件的收件人地址，并使用smtp和邮件内容调用mail方法发送邮件
         return mail(
                 smtp,
@@ -59,7 +56,6 @@ public class MailSmtpMessageService extends AbstractSendService<MailProperties.S
                 null,
                 context.getText()
         );
-        // @formatter:on
     }
 
     /**
@@ -82,7 +78,6 @@ public class MailSmtpMessageService extends AbstractSendService<MailProperties.S
         Assert.notNull(smtp.getPassword(), "password should not be null!");
 
         try {
-            // @formatter:off
             // 尝试通过SMTP方式发送邮件
             MailUtils.smtp(
                     smtp.getHost(),
@@ -92,7 +87,6 @@ public class MailSmtpMessageService extends AbstractSendService<MailProperties.S
                     smtp.getPassword(),
                     title, content
             );
-            // @formatter:on
             return "success";
         } catch (MessagingException e) {
             log.error("mail smtp message send error", e);

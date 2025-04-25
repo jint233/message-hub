@@ -16,11 +16,15 @@ import java.util.function.Consumer;
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class RestClientUtils {
 
-    private static RestClient restClient;
+    private static volatile RestClient restClient;
 
-    public static synchronized RestClient getRestClient() {
+    public static RestClient getRestClient() {
         if (restClient == null) {
-            return RestClient.builder().build();
+            synchronized (RestClientUtils.class) {
+                if (restClient == null) {
+                    restClient = RestClient.builder().build();
+                }
+            }
         }
         return restClient;
     }
@@ -33,7 +37,6 @@ public class RestClientUtils {
      * @return Consumer<HttpHeaders> 一个消费者函数，用于设置HTTP头的内容类型为JSON
      */
     public static Consumer<HttpHeaders> getJsonContentHeaders() {
-        // 返回一个Lambda表达式，设置HttpHeaders的内容类型为JSON
         return headers -> headers.setContentType(MediaType.APPLICATION_JSON);
     }
 
@@ -45,18 +48,14 @@ public class RestClientUtils {
      * @return 响应体的内容，类型为String。发送POST请求后接收到的服务器响应
      */
     public static String post(String url, Object body) {
-        // @formatter:off
-        // 使用RestClient发送POST请求，设置请求的URL、请求头和请求体
         return RestClientUtils.getRestClient()
                 .post()
                 .uri(url)
                 .headers(getJsonContentHeaders())
                 .body(body)
-                // 发送请求并获取响应体
                 .retrieve()
                 .toEntity(String.class)
                 .getBody();
-        // @formatter:on
     }
 
     /**
@@ -66,7 +65,6 @@ public class RestClientUtils {
      * @return 返回从指定URL获得的响应内容，类型为String
      */
     public static String get(String url) {
-        // 调用重载的get方法，将URL和期望的响应类型String传入
         return RestClientUtils.get(url, String.class);
     }
 
@@ -78,16 +76,12 @@ public class RestClientUtils {
      * @return 响应体的内容，类型为指定的entityClass类型。通过该方法，可以将返回的JSON或XML等数据自动解析为Java对象
      */
     public static <T> T get(String url, Class<T> entityClass) {
-        // @formatter:off
-        // 设置请求URL和请求头，发送请求并获取响应体，最后将响应体解析为指定类型的对象
         return RestClientUtils.getRestClient()
                 .post()
                 .uri(url)
                 .headers(getJsonContentHeaders())
-                // 发送GET请求并获取响应
                 .retrieve()
                 .toEntity(entityClass)
                 .getBody();
-        // @formatter:on
     }
 }

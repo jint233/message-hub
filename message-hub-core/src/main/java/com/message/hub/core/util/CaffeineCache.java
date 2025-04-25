@@ -32,17 +32,12 @@ public class CaffeineCache {
     public static Cache<Object, Object> getCache(String cacheName, Long seconds) {
         Assert.notNull(cacheName, "cacheName value should bot be null!");
         Assert.notNull(seconds, "seconds value should bot be null!");
-        // @format:off
-        // 尝试从缓存集合中获取指定名称的缓存，如果不存在，则构建一个新的缓存并添加到集合中
-        return CACHES.computeIfAbsent(cacheName, cache ->
-                // 使用Caffeine构建器配置新的缓存
-                Caffeine.newBuilder()
-                        // 设置缓存的过期时间
-                        .expireAfterWrite(Duration.ofSeconds(seconds))
-                        // 构建并返回缓存对象
-                        .build()
+        return CACHES.computeIfAbsent(cacheName,
+                cache ->
+                        Caffeine.newBuilder()
+                                .expireAfterWrite(Duration.ofSeconds(seconds))
+                                .build()
         );
-        // @format:on
     }
 
     /**
@@ -52,11 +47,9 @@ public class CaffeineCache {
      * @return 如果缓存中存在指定名称的缓存项，则返回对应的令牌字符串；如果不存在或缓存为空，则返回null
      */
     public static String getToken(String cacheName) {
-        // 检查缓存是否包含指定的缓存名称
         if (!CACHES.containsKey(cacheName)) {
             return null;
         }
-        // 尝试从缓存中获取名为TOKEN的项
         return (String) CACHES.get(cacheName).getIfPresent(TOKEN);
     }
 
@@ -68,13 +61,9 @@ public class CaffeineCache {
      * @return 如果缓存中之前已经存在了token，则返回之前的token值；否则返回null
      */
     public static String setToken(String cacheName, Long seconds, Object tokenValue) {
-        // 确保tokenValue不为null
         Assert.notNull(tokenValue, "token value should bot be null!");
-        // 通过cacheName获取缓存对象
         Cache<Object, Object> cache = getCache(cacheName, seconds);
-        // 将tokenValue设置到缓存中，键为TOKEN
         cache.put(TOKEN, tokenValue);
-        // 返回缓存中当前的token值
         return (String) cache.getIfPresent(TOKEN);
     }
 }

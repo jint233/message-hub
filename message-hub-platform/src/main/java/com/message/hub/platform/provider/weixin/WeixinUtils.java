@@ -21,19 +21,6 @@ public class WeixinUtils {
     private static final String MESSAGE = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=%s";
 
     /**
-     * 向自定义机器人发送请求。
-     * 该方法通过POST请求向指定的Webhook地址发送消息体。
-     *
-     * @param key  自定义机器人的Key，用于构建Webhook地址。
-     * @param body 要发送的消息体内容。
-     * @return RestClientUtils.post返回的响应结果，通常为字符串形式的响应体。
-     */
-    public static String weixinBot(String key, WeixinUtils.RobotRequest body) {
-        // 使用Key格式化Webhook地址，并发送POST请求
-        return RestClientUtils.post(String.format(WEBHOOK, key), body);
-    }
-
-    /**
      * 获取企业微信的访问令牌。
      *
      * @param corpId     企业ID，用于标识企业微信账号。
@@ -54,6 +41,19 @@ public class WeixinUtils {
     }
 
     /**
+     * 向自定义机器人发送请求。
+     * 该方法通过POST请求向指定的Webhook地址发送消息体。
+     *
+     * @param key  自定义机器人的Key，用于构建Webhook地址。
+     * @param body 要发送的消息体内容。
+     * @return RestClientUtils.post返回的响应结果，通常为字符串形式的响应体。
+     */
+    public static String botSend(String key, WeixinUtils.RobotRequest body) {
+        // 使用Key格式化Webhook地址，并发送POST请求
+        return RestClientUtils.post(String.format(WEBHOOK, key), body);
+    }
+
+    /**
      * 发送企业消息
      *
      * @param corpId     企业的ID，用于身份验证。
@@ -64,7 +64,7 @@ public class WeixinUtils {
      * 此方法内部通过调用getToken获取访问令牌，并将其格式化到消息发送的URL中，
      * 随后使用RestClientUtils的post方法发送POST请求。
      */
-    public static String message(String corpId, String corpSecret, MessageRobotRequest body) {
+    public static String chatSend(String corpId, String corpSecret, MessageRobotRequest body) {
         return RestClientUtils.post(String.format(MESSAGE, getToken(corpId, corpSecret)), body);
     }
 
@@ -91,13 +91,13 @@ public class WeixinUtils {
             }
 
             public Builder withMarkdown(String markdown) {
-                Assert.isTrue(!"markdown" .equals(this.options.msgType), " msgType value is not markdown, should not use this method!");
+                Assert.isTrue(!"markdown".equals(this.options.msgType), " msgType value is not markdown, should not use this method!");
                 this.options.markdown = new Content(markdown);
                 return this;
             }
 
             public Builder withText(String text) {
-                Assert.isTrue(!"text" .equals(this.options.msgType), " msgType value is not text, should not use this method!");
+                Assert.isTrue(!"text".equals(this.options.msgType), " msgType value is not text, should not use this method!");
                 this.options.text = new Content(text);
                 return this;
             }
@@ -138,13 +138,13 @@ public class WeixinUtils {
             }
 
             public Builder withMarkdown(String markdown) {
-                Assert.isTrue(!"markdown" .equals(this.options.msgType), " msgType value is not markdown, should not use this method!");
+                Assert.isTrue(!"markdown".equals(this.options.msgType), " msgType value is not markdown, should not use this method!");
                 this.options.markdown = new Content(markdown);
                 return this;
             }
 
             public Builder withText(String text) {
-                Assert.isTrue(!"text" .equals(this.options.msgType), " msgType value is not text, should not use this method!");
+                Assert.isTrue(!"text".equals(this.options.msgType), " msgType value is not text, should not use this method!");
                 this.options.text = new Content(text);
                 return this;
             }

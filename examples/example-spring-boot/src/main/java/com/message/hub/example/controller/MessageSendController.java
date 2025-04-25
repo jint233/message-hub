@@ -29,16 +29,14 @@ public class MessageSendController {
         return messageService.send(MessageContext.buildMarkdown()
                 .addAlias("dingtalk-bot-1")
                 .addMessageType(MessageType.DingtalkBot)
-                .title("【服务器监控告警-平台】")
+                .title("【服务器监控告警】")
                 .addLine(SubLine.title("应用服务器", 3))
-                .addLine(SubLine.text("------------------------"))
                 .addLine(SubLine.bold("服务器名称：server1"))
                 .addLine(SubLine.bold("CPU 使用率：90%"))
                 .addLine(SubLine.bold("服务器名称：server2"))
                 .addLine(SubLine.bold("CPU 使用率：80%"))
-                .addLine(SubLine.text("          "))
+                .addLine(SubLine.text("------------------------"))
                 .addLine(SubLine.title("数据库服务器", 3))
-                .addLine(SubLine.text("-------------------------"))
                 .addLine(SubLine.bold("CPU 使用率：90%"))
                 .addDingtalkRobot("to_all_user", true));
     }

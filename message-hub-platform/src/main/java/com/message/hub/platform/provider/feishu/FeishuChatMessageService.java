@@ -105,7 +105,6 @@ public class FeishuChatMessageService extends AbstractSendService<FeishuProperti
         Map<String, List<String>> headers = new HashMap<>(16);
         headers.put(RECEIVE_ID_TYPE, Lists.newArrayList((String) context.getContentParams(chat.getAlias()).getFeishuMessage().get(RECEIVE_ID_TYPE)));
 
-        // @formatter:off
         // 创建并发送消息，获取响应
         return client.im()
                 .message()
@@ -123,7 +122,6 @@ public class FeishuChatMessageService extends AbstractSendService<FeishuProperti
                                 .headers(headers)
                                 .build()
                 );
-        // @formatter:on
     }
 
 }

@@ -41,20 +41,18 @@ public class WeixinChatMessageService extends AbstractSendService<WeixinProperti
         Map<String, Object> params = context.getContentParams(chat.getAlias()).getWeixinMessage();
 
         try {
-            // @formatter:off
             // 构建并发送Markdown消息
-            return WeixinUtils.message(
+            return WeixinUtils.chatSend(
                     chat.getCorpId(),
                     chat.getCorpSecret(),
                     WeixinUtils.MessageRobotRequest
                             .builder("markdown", chat.getAgentId())
                             .withMarkdown(ContentUtils.toMarkdown(context))
-                            .withToUser((String) params.getOrDefault(TOUSER,null))
-                            .withToParty((String) params.getOrDefault(TOPARTY,null))
-                            .withToTag((String) params.getOrDefault(TOTAG,null))
+                            .withToUser((String) params.getOrDefault(TOUSER, null))
+                            .withToParty((String) params.getOrDefault(TOPARTY, null))
+                            .withToTag((String) params.getOrDefault(TOTAG, null))
                             .build()
             );
-            // @formatter:on
         } catch (Exception e) {
             log.error("weixin markdown message send error", e);
             throw new WeixinMessageException(e.getMessage(), e);
@@ -78,20 +76,18 @@ public class WeixinChatMessageService extends AbstractSendService<WeixinProperti
         Map<String, Object> params = context.getContentParams(chat.getAlias()).getWeixinMessage();
 
         try {
-            // @formatter:off
             // 构建并发送Markdown消息
-          return WeixinUtils.message(
+            return WeixinUtils.chatSend(
                     chat.getCorpId(),
                     chat.getCorpSecret(),
                     WeixinUtils.MessageRobotRequest
                             .builder("text", chat.getAgentId())
                             .withText(context.getText())
-                            .withToUser((String) params.getOrDefault(TOUSER,null))
-                            .withToParty((String) params.getOrDefault(TOPARTY,null))
-                            .withToTag((String) params.getOrDefault(TOTAG,null))
+                            .withToUser((String) params.getOrDefault(TOUSER, null))
+                            .withToParty((String) params.getOrDefault(TOPARTY, null))
+                            .withToTag((String) params.getOrDefault(TOTAG, null))
                             .build()
             );
-            // @formatter:on
         } catch (Exception e) {
             log.error("weixin text message send error", e);
             throw new WeixinMessageException(e.getMessage(), e);

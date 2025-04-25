@@ -85,15 +85,13 @@ public class DingtalkChatMessageService extends AbstractSendService<DingtalkProp
      */
     private String execute(DingtalkProperties.Chat chat, OapiMessageCorpconversationAsyncsendV2Request request) {
         try {
-            // @formatter:off
             return JSON.toJSONString(
-                    DingtalkUtils.getMessageClient()
+                    DingtalkUtils.getChatClient()
                             .execute(request,
                                     DingtalkUtils.getToken(
                                             Objects.requireNonNull(chat.getAppKey()),
                                             Objects.requireNonNull(chat.getAppSecret())))
             );
-            // @formatter:on
         } catch (Exception e) {
             log.error("dingtalk chat message send error", e);
             throw new DingtalkMessageException(e.getMessage(), e);

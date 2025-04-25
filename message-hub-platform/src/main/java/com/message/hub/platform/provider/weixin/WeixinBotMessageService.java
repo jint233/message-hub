@@ -29,16 +29,14 @@ public class WeixinBotMessageService extends AbstractSendService<WeixinPropertie
     public String sendMarkdown(WeixinProperties.Bot bot, MarkdownContext context) {
         Assert.notNull(bot.getKey(), "key should not be null!");
         try {
-            // @formatter:off
             // 构建向微信自定义机器人发送的消息请求，其中消息类型设定为markdown，内容为传入的markdown格式文本
-            return WeixinUtils.weixinBot(
+            return WeixinUtils.botSend(
                     bot.getKey(),
                     WeixinUtils.RobotRequest
                             .builder("markdown")
                             .withMarkdown(ContentUtils.toMarkdown(context))
                             .build()
             );
-            // @formatter:on
         } catch (Exception e) {
             log.error("weixin bot markdown message send error", e);
             throw new WeixinMessageException(e.getMessage(), e);
@@ -56,9 +54,8 @@ public class WeixinBotMessageService extends AbstractSendService<WeixinPropertie
     public String sendText(WeixinProperties.Bot bot, TextContext context) {
         Assert.notNull(bot.getKey(), "key should not be null!");
         try {
-            // @formatter:off
             // 构建并发送自定义机器人文本消息
-            return WeixinUtils.weixinBot(
+            return WeixinUtils.botSend(
                     // 使用别名属性中的关键令牌
                     bot.getKey(),
                     WeixinUtils.RobotRequest
@@ -69,7 +66,6 @@ public class WeixinBotMessageService extends AbstractSendService<WeixinPropertie
                             // 构建消息请求
                             .build()
             );
-            // @formatter:on
         } catch (Exception e) {
             log.error("weixin bot text message send error", e);
             throw new WeixinMessageException(e.getMessage(), e);
