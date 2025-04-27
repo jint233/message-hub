@@ -3,7 +3,7 @@ package com.message.hub.platform.provider.weixin;
 import com.alibaba.fastjson2.JSON;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.message.hub.core.domain.PlatformSendResult;
+import com.message.hub.core.result.PlatformSendResult;
 import com.message.hub.core.properties.WeixinProperties;
 import com.message.hub.core.util.CaffeineCache;
 import com.message.hub.core.util.RestClientUtils;

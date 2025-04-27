@@ -1,6 +1,6 @@
 package com.message.hub.platform.provider.feishu;
 
-import com.message.hub.core.domain.PlatformSendResult;
+import com.message.hub.core.result.PlatformSendResult;
 import com.message.hub.core.exception.FeishuMessageException;
 import com.message.hub.core.properties.FeishuProperties;
 import com.message.hub.platform.context.MarkdownContext;

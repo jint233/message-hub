@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.message.hub.core.content.SubBoldLine;
 import com.message.hub.core.content.SubLinkLine;
-import com.message.hub.core.domain.PlatformSendResult;
+import com.message.hub.core.result.PlatformSendResult;
 import com.message.hub.core.properties.FeishuProperties;
 import com.message.hub.core.util.RestClientUtils;
 import com.message.hub.platform.context.MarkdownContext;

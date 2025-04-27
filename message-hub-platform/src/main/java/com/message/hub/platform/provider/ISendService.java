@@ -1,6 +1,6 @@
 package com.message.hub.platform.provider;
 
-import com.message.hub.core.domain.PlatformSendResult;
+import com.message.hub.core.result.PlatformSendResult;
 import com.message.hub.core.properties.MessageChannel;
 import com.message.hub.platform.context.MarkdownContext;
 import com.message.hub.platform.context.TextContext;

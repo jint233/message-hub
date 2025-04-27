@@ -1,7 +1,7 @@
 package com.message.hub.platform.provider;
 
 import com.alibaba.fastjson2.JSON;
-import com.message.hub.core.domain.PlatformSendResult;
+import com.message.hub.core.result.PlatformSendResult;
 import com.message.hub.core.exception.MessageException;
 import com.message.hub.core.properties.MessageChannel;
 import lombok.NoArgsConstructor;

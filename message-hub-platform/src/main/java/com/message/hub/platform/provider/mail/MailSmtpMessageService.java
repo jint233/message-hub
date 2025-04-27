@@ -1,6 +1,6 @@
 package com.message.hub.platform.provider.mail;
 
-import com.message.hub.core.domain.PlatformSendResult;
+import com.message.hub.core.result.PlatformSendResult;
 import com.message.hub.core.exception.MailMessageException;
 import com.message.hub.core.properties.MailProperties;
 import com.message.hub.platform.context.MarkdownContext;

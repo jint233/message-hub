@@ -9,7 +9,7 @@ import com.lark.oapi.core.utils.Lists;
 import com.lark.oapi.service.im.v1.model.CreateMessageReq;
 import com.lark.oapi.service.im.v1.model.CreateMessageReqBody;
 import com.lark.oapi.service.im.v1.model.CreateMessageResp;
-import com.message.hub.core.domain.PlatformSendResult;
+import com.message.hub.core.result.PlatformSendResult;
 import com.message.hub.core.exception.FeishuMessageException;
 import com.message.hub.core.properties.FeishuProperties;
 import com.message.hub.platform.context.MarkdownContext;

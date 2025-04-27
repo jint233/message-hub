@@ -1,4 +1,4 @@
-package com.message.hub.core.domain;
+package com.message.hub.core.result;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * 平台响应
+ * 消息发送响应
  *
  * @author jint233
  * @date 2025/04/27

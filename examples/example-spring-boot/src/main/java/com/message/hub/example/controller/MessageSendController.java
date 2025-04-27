@@ -1,7 +1,7 @@
 package com.message.hub.example.controller;
 
 import com.message.hub.core.content.SubLine;
-import com.message.hub.core.domain.SendResult;
+import com.message.hub.core.result.SendResult;
 import com.message.hub.platform.context.MessageContext;
 import com.message.hub.platform.provider.MessageService;
 import com.message.hub.platform.provider.MessageType;

@@ -3,7 +3,7 @@ package com.message.hub.platform.provider.dingtalk;
 import com.alibaba.fastjson2.JSON;
 import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
 import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
-import com.message.hub.core.domain.PlatformSendResult;
+import com.message.hub.core.result.PlatformSendResult;
 import com.message.hub.core.exception.DingtalkMessageException;
 import com.message.hub.core.properties.DingtalkProperties;
 import com.message.hub.platform.context.MarkdownContext;

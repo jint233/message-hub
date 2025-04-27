@@ -1,17 +1,17 @@
 package com.message.hub.platform.provider;
 
 import com.google.common.base.Preconditions;
-import com.message.hub.core.domain.PlatformSendResult;
-import com.message.hub.core.domain.SendResult;
+import com.message.hub.core.result.PlatformSendResult;
+import com.message.hub.core.result.SendResult;
 import com.message.hub.core.properties.MessageChannel;
 import com.message.hub.platform.context.MessageContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 消息服务
@@ -38,21 +38,25 @@ public class MessageService {
      * @param context 请求上下文，包含别名和消息类型等信息
      * @return 发送结果列表，列表中可能包含成功发送的消息或发送失败的错误信息
      */
-    @SuppressWarnings("unchecked")
     public SendResult send(final MessageContext<?> context) {
-        final List<MessageChannel> sendChannels = channels.parallelStream()
+        final List<MessageChannel> sendChannels = channels.stream()
                 .filter(channel -> context.getAlias().isEmpty() ||
                         context.getAlias().contains(channel.getAlias()))
                 .filter(channel -> context.getMessageType().isEmpty() ||
                         context.getMessageType().contains(MessageType.getMessageType(channel)))
                 .toList();
-        final CompletableFuture<PlatformSendResult>[] futures = sendChannels.stream()
+        final List<PlatformSendResult> platformResults = sendChannels.stream()
                 .map(channel ->
-                        CompletableFuture.supplyAsync(() -> MessageDispatcher.run(channel, context), taskExecutor))
-                .toArray(CompletableFuture[]::new);
-        final List<PlatformSendResult> platformResults = CompletableFuture.allOf(futures)
-                .thenApply(v -> Arrays.stream(futures).map(CompletableFuture::join).toList())
-                .join();
+                        CompletableFuture.supplyAsync(() -> MessageDispatcher.run(channel, context), taskExecutor)
+                                .exceptionally(ex -> {
+                                    log.error("Channel {} dispatch failed", channel.getAlias(), ex);
+                                    return PlatformSendResult.fail(ex.getMessage());
+                                }).orTimeout(30, TimeUnit.SECONDS)
+                )
+                .toList()
+                .stream()
+                .map(CompletableFuture::join)
+                .toList();
         return SendResult.warp(platformResults);
     }
 
