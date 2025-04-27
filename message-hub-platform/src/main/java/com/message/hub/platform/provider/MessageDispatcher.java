@@ -1,7 +1,9 @@
 package com.message.hub.platform.provider;
 
-import com.message.hub.core.properties.MessageChannel;
+import com.alibaba.fastjson2.JSON;
+import com.message.hub.core.domain.PlatformSendResult;
 import com.message.hub.core.exception.MessageException;
+import com.message.hub.core.properties.MessageChannel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.support.RetryTemplate;
@@ -21,7 +23,11 @@ public class MessageDispatcher {
 
     private static final ConcurrentHashMap<Class, ISendService> INSTANCES = new ConcurrentHashMap<>();
 
-    public static <T extends ISendService<R>, R extends MessageChannel> String run(R channel, Object context) {
+    public static <T extends ISendService<R>, R extends MessageChannel> PlatformSendResult run(R channel, Object context) {
+        if (log.isDebugEnabled()) {
+            log.debug("[MessageDispatcher] send platform message,Thread=: {}, channel=: {}, context: {}",
+                    Thread.currentThread().getName(), channel, JSON.toJSONString(context));
+        }
         return RetryTemplate.builder()
                 .maxAttempts(3)
                 .exponentialBackoff(1000, 2, 5000)

@@ -1,7 +1,10 @@
 package com.message.hub.platform.provider.weixin;
 
+import com.alibaba.fastjson2.JSON;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.message.hub.core.domain.PlatformSendResult;
+import com.message.hub.core.properties.WeixinProperties;
 import com.message.hub.core.util.CaffeineCache;
 import com.message.hub.core.util.RestClientUtils;
 import lombok.NoArgsConstructor;
@@ -21,11 +24,11 @@ public class WeixinUtils {
     private static final String MESSAGE = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=%s";
 
     /**
-     * 获取企业微信的访问令牌。
+     * 获取企业微信的访问令牌
      *
-     * @param corpId     企业ID，用于标识企业微信账号。
-     * @param corpSecret 企业微信的密钥，用于验证身份。
-     * @return 返回从企业微信服务器获取的访问令牌。
+     * @param corpId     企业ID，用于标识企业微信账号
+     * @param corpSecret 企业微信的密钥，用于验证身份
+     * @return 返回从企业微信服务器获取的访问令牌
      */
     private static String getToken(String corpId, String corpSecret) {
         // 尝试从缓存中获取令牌
@@ -41,31 +44,43 @@ public class WeixinUtils {
     }
 
     /**
-     * 向自定义机器人发送请求。
-     * 该方法通过POST请求向指定的Webhook地址发送消息体。
+     * 向自定义机器人发送请求
+     * 该方法通过POST请求向指定的Webhook地址发送消息体
      *
-     * @param key  自定义机器人的Key，用于构建Webhook地址。
-     * @param body 要发送的消息体内容。
-     * @return RestClientUtils.post返回的响应结果，通常为字符串形式的响应体。
+     * @param bot  机器人配置
+     * @param body 要发送的消息体内容
+     * @return {@link PlatformSendResult } 响应结果
      */
-    public static String botSend(String key, WeixinUtils.RobotRequest body) {
-        // 使用Key格式化Webhook地址，并发送POST请求
-        return RestClientUtils.post(String.format(WEBHOOK, key), body);
+    public static PlatformSendResult botSend(WeixinProperties.Bot bot, WeixinUtils.RobotRequest body) {
+        final String response = RestClientUtils.post(String.format(WEBHOOK, bot.getKey()), body);
+        final WeixinResponse botResponse = JSON.parseObject(response, WeixinResponse.class);
+        return PlatformSendResult.builder()
+                .alias(bot.getAlias())
+                .success(botResponse.success())
+                .code(String.valueOf(botResponse.getErrcode()))
+                .message(botResponse.getErrmsg())
+                .detail(response)
+                .build();
     }
+
 
     /**
      * 发送企业消息
      *
-     * @param corpId     企业的ID，用于身份验证。
-     * @param corpSecret 企业的应用secret，用于获取访问令牌。
-     * @param body       消息的内容，将被发送给指定的企业。
-     * @return 返回发送消息后接收到的响应内容。
-     * <p>
-     * 此方法内部通过调用getToken获取访问令牌，并将其格式化到消息发送的URL中，
-     * 随后使用RestClientUtils的post方法发送POST请求。
+     * @param chat 消息渠道配置
+     * @param body 消息的内容，将被发送给指定的企业
+     * @return {@link PlatformSendResult } 响应结果
      */
-    public static String chatSend(String corpId, String corpSecret, MessageRobotRequest body) {
-        return RestClientUtils.post(String.format(MESSAGE, getToken(corpId, corpSecret)), body);
+    public static PlatformSendResult chatSend(WeixinProperties.Chat chat, MessageRobotRequest body) {
+        final String response = RestClientUtils.post(String.format(MESSAGE, getToken(chat.getCorpId(), chat.getCorpSecret())), body);
+        final WeixinResponse chatResponse = JSON.parseObject(response, WeixinResponse.class);
+        return PlatformSendResult.builder()
+                .alias(chat.getAlias())
+                .success(chatResponse.success())
+                .code(String.valueOf(chatResponse.getErrcode()))
+                .message(chatResponse.getErrmsg())
+                .detail(response)
+                .build();
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

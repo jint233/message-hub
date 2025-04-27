@@ -42,27 +42,27 @@ public class MessageContext<T> {
     }
 
     public T addDingtalkRobot(String key, Object value) {
-        params.getDingtalkRobot().put(key, value);
+        params.getDingtalkBot().put(key, value);
         return (T) this;
     }
 
     public T addDingtalkMessage(String key, Object value) {
-        params.getDingtalkMessage().put(key, value);
+        params.getDingtalkChat().put(key, value);
         return (T) this;
     }
 
     public T addFeishuRobot(String key, Object value) {
-        params.getFeishuRobot().put(key, value);
+        params.getFeishuBot().put(key, value);
         return (T) this;
     }
 
     public T addFeishuMessage(String key, Object value) {
-        params.getFeishuMessage().put(key, value);
+        params.getFeishuChat().put(key, value);
         return (T) this;
     }
 
     public T addWeixinMessage(String key, Object value) {
-        params.getWeixinMessage().put(key, value);
+        params.getWeixinChat().put(key, value);
         return (T) this;
     }
 
@@ -72,27 +72,27 @@ public class MessageContext<T> {
     }
 
     public T addDingtalkRobot(String alias, String key, Object value) {
-        aliasParams.computeIfAbsent(alias, s -> new ContextParams()).getDingtalkRobot().put(key, value);
+        aliasParams.computeIfAbsent(alias, s -> new ContextParams()).getDingtalkBot().put(key, value);
         return (T) this;
     }
 
     public T addDingtalkMessage(String alias, String key, Object value) {
-        aliasParams.computeIfAbsent(alias, s -> new ContextParams()).getDingtalkMessage().put(key, value);
+        aliasParams.computeIfAbsent(alias, s -> new ContextParams()).getDingtalkChat().put(key, value);
         return (T) this;
     }
 
     public T addFeishuRobot(String alias, String key, Object value) {
-        aliasParams.computeIfAbsent(alias, s -> new ContextParams()).getFeishuRobot().put(key, value);
+        aliasParams.computeIfAbsent(alias, s -> new ContextParams()).getFeishuBot().put(key, value);
         return (T) this;
     }
 
     public T addFeishuMessage(String alias, String key, Object value) {
-        aliasParams.computeIfAbsent(alias, s -> new ContextParams()).getFeishuMessage().put(key, value);
+        aliasParams.computeIfAbsent(alias, s -> new ContextParams()).getFeishuChat().put(key, value);
         return (T) this;
     }
 
     public T addWeixinMessage(String alias, String key, Object value) {
-        aliasParams.computeIfAbsent(alias, s -> new ContextParams()).getWeixinMessage().put(key, value);
+        aliasParams.computeIfAbsent(alias, s -> new ContextParams()).getWeixinChat().put(key, value);
         return (T) this;
     }
 

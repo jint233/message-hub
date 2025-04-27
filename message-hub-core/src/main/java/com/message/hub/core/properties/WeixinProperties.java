@@ -32,7 +32,7 @@ public class WeixinProperties {
 
     /**
      * 发送应用消息
-     * <a href="https://developer.work.weixin.qq.com/document/path/90236"> 群机器人配置说明 </a>
+     * <a href="https://developer.work.weixin.qq.com/document/path/90236"> 发送应用消息 </a>
      */
     @Data
     @EqualsAndHashCode(callSuper = true)

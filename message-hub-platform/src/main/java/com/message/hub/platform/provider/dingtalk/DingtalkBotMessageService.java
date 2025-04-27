@@ -2,6 +2,8 @@ package com.message.hub.platform.provider.dingtalk;
 
 import com.alibaba.fastjson2.JSON;
 import com.dingtalk.api.request.OapiRobotSendRequest;
+import com.dingtalk.api.response.OapiRobotSendResponse;
+import com.message.hub.core.domain.PlatformSendResult;
 import com.message.hub.core.exception.DingtalkMessageException;
 import com.message.hub.core.properties.DingtalkProperties;
 import com.message.hub.platform.context.MarkdownContext;
@@ -31,11 +33,11 @@ public class DingtalkBotMessageService extends AbstractSendService<DingtalkPrope
      *
      * @param bot     钉钉机器人配置
      * @param context 消息上下文
-     * @return {@link String } 处理结果
+     * @return {@link PlatformSendResult } 处理结果
      */
     @Override
-    public String sendMarkdown(DingtalkProperties.Bot bot, MarkdownContext context) {
-        Map<String, Object> params = context.getContentParams(bot.getAlias()).getDingtalkRobot();
+    public PlatformSendResult sendMarkdown(DingtalkProperties.Bot bot, MarkdownContext context) {
+        Map<String, Object> params = context.getContentParams(bot.getAlias()).getDingtalkBot();
         OapiRobotSendRequest request = this.request(params);
         request.setMsgtype("markdown");
         OapiRobotSendRequest.Markdown markdown = new OapiRobotSendRequest.Markdown();
@@ -50,11 +52,11 @@ public class DingtalkBotMessageService extends AbstractSendService<DingtalkPrope
      *
      * @param bot     钉钉机器人配置
      * @param context 消息上下文
-     * @return {@link String } 处理结果
+     * @return {@link PlatformSendResult } 处理结果
      */
     @Override
-    public String sendText(DingtalkProperties.Bot bot, TextContext context) {
-        Map<String, Object> params = context.getContentParams(bot.getAlias()).getDingtalkRobot();
+    public PlatformSendResult sendText(DingtalkProperties.Bot bot, TextContext context) {
+        Map<String, Object> params = context.getContentParams(bot.getAlias()).getDingtalkBot();
         OapiRobotSendRequest request = this.request(params);
         request.setMsgtype("text");
         OapiRobotSendRequest.Text text = new OapiRobotSendRequest.Text();
@@ -81,19 +83,22 @@ public class DingtalkBotMessageService extends AbstractSendService<DingtalkPrope
      *
      * @param bot     钉钉自定义机器人配置属性，包含access-token和secret
      * @param request 发送给钉钉自定义机器人的消息请求对象
-     * @return 返回钉钉服务器响应的JSON字符串
+     * @return {@link PlatformSendResult } 返回钉钉消息发送响应结果
      *
      * @throws DingtalkMessageException 如果执行过程中出现异常，将会抛出此运行时异常
      */
-    private String execute(DingtalkProperties.Bot bot, OapiRobotSendRequest request) {
+    private PlatformSendResult execute(DingtalkProperties.Bot bot, OapiRobotSendRequest request) {
         try {
-            return JSON.toJSONString(
-                    DingtalkUtils
-                            .getBotClient(
-                                    Objects.requireNonNull(bot.getAccessToken()),
-                                    Objects.requireNonNull(bot.getSecret()))
-                            .execute(request)
-            );
+            final OapiRobotSendResponse response = DingtalkUtils
+                    .getBotClient(Objects.requireNonNull(bot.getAccessToken()), Objects.requireNonNull(bot.getSecret()))
+                    .execute(request);
+            return PlatformSendResult.builder()
+                    .alias(bot.getAlias())
+                    .success(response.isSuccess())
+                    .code(response.getErrorCode())
+                    .message(response.getErrmsg())
+                    .detail(JSON.toJSONString(response))
+                    .build();
         } catch (ApiException | NoSuchAlgorithmException | InvalidKeyException e) {
             log.error("dingtalk bot message send error", e);
             throw new DingtalkMessageException(e.getMessage(), e);

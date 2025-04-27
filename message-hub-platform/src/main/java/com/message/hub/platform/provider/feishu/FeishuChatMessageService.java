@@ -9,6 +9,7 @@ import com.lark.oapi.core.utils.Lists;
 import com.lark.oapi.service.im.v1.model.CreateMessageReq;
 import com.lark.oapi.service.im.v1.model.CreateMessageReqBody;
 import com.lark.oapi.service.im.v1.model.CreateMessageResp;
+import com.message.hub.core.domain.PlatformSendResult;
 import com.message.hub.core.exception.FeishuMessageException;
 import com.message.hub.core.properties.FeishuProperties;
 import com.message.hub.platform.context.MarkdownContext;
@@ -38,10 +39,10 @@ public class FeishuChatMessageService extends AbstractSendService<FeishuProperti
      *
      * @param chat    飞书消息配置属性
      * @param context Markdown内容对象，包含消息标题和内容
-     * @return 返回发送消息后的响应结果，格式为JSON字符串
+     * @return {@link PlatformSendResult } 响应结果
      */
     @Override
-    public String sendMarkdown(FeishuProperties.Chat chat, MarkdownContext context) {
+    public PlatformSendResult sendMarkdown(FeishuProperties.Chat chat, MarkdownContext context) {
         Assert.notNull(chat.getAppId(), "appId should not be null!");
         Assert.notNull(chat.getAppSecret(), "appSecret should not be null!");
 
@@ -53,8 +54,14 @@ public class FeishuChatMessageService extends AbstractSendService<FeishuProperti
         jo.put("zh_cn", post);
 
         try {
-            CreateMessageResp resp = this.execute(chat, context, jo, "post");
-            return JSON.toJSONString(resp);
+            final CreateMessageResp response = this.execute(chat, context, jo, "post");
+            return PlatformSendResult.builder()
+                    .alias(chat.getAlias())
+                    .success(response.success())
+                    .code(String.valueOf(response.getCode()))
+                    .message(response.getMsg())
+                    .detail(JSON.toJSONString(response))
+                    .build();
         } catch (Exception e) {
             log.error("feishu chat markdown message send error", e);
             throw new FeishuMessageException(e.getMessage(), e);
@@ -66,10 +73,10 @@ public class FeishuChatMessageService extends AbstractSendService<FeishuProperti
      *
      * @param chat    飞书消息配置属性
      * @param context 消息内容，包括文本和额外参数
-     * @return 发送结果，成功返回JSON格式的响应信息，失败返回错误信息字符串
+     * @return {@link PlatformSendResult } 响应结果
      */
     @Override
-    public String sendText(FeishuProperties.Chat chat, TextContext context) {
+    public PlatformSendResult sendText(FeishuProperties.Chat chat, TextContext context) {
         Assert.notNull(chat.getAppId(), "appId should not be null!");
         Assert.notNull(chat.getAppSecret(), "appSecret should not be null!");
 
@@ -78,8 +85,14 @@ public class FeishuChatMessageService extends AbstractSendService<FeishuProperti
         jo.put("text", context.getText());
 
         try {
-            CreateMessageResp resp = this.execute(chat, context, jo, "text");
-            return JSON.toJSONString(resp);
+            final CreateMessageResp response = this.execute(chat, context, jo, "text");
+            return PlatformSendResult.builder()
+                    .alias(chat.getAlias())
+                    .success(response.success())
+                    .code(String.valueOf(response.getCode()))
+                    .message(response.getMsg())
+                    .detail(JSON.toJSONString(response))
+                    .build();
         } catch (Exception e) {
             log.error("feishu chat text message send error", e);
             throw new FeishuMessageException(e.getMessage(), e);
@@ -103,7 +116,7 @@ public class FeishuChatMessageService extends AbstractSendService<FeishuProperti
 
         // 设置请求头，包含消息接收者类型
         Map<String, List<String>> headers = new HashMap<>(16);
-        headers.put(RECEIVE_ID_TYPE, Lists.newArrayList((String) context.getContentParams(chat.getAlias()).getFeishuMessage().get(RECEIVE_ID_TYPE)));
+        headers.put(RECEIVE_ID_TYPE, Lists.newArrayList((String) context.getContentParams(chat.getAlias()).getFeishuChat().get(RECEIVE_ID_TYPE)));
 
         // 创建并发送消息，获取响应
         return client.im()
@@ -112,7 +125,7 @@ public class FeishuChatMessageService extends AbstractSendService<FeishuProperti
                         CreateMessageReq.newBuilder()
                                 .createMessageReqBody(
                                         CreateMessageReqBody.newBuilder()
-                                                .receiveId((String) context.getParams().getFeishuMessage().get("receive_id"))
+                                                .receiveId((String) context.getParams().getFeishuChat().get("receive_id"))
                                                 .msgType(type)
                                                 .content(obj.toJSONString())
                                                 .build()

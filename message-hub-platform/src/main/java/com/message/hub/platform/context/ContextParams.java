@@ -15,22 +15,22 @@ import java.util.Map;
 public class ContextParams {
 
     /** 钉钉机器人 */
-    private Map<String, Object> dingtalkRobot = new HashMap<>();
+    private Map<String, Object> dingtalkBot = new HashMap<>();
 
     /** 钉钉消息 */
-    private Map<String, Object> dingtalkMessage = new HashMap<>();
+    private Map<String, Object> dingtalkChat = new HashMap<>();
 
     /** 飞书机器人 */
-    private Map<String, Object> feishuRobot = new HashMap<>();
+    private Map<String, Object> feishuBot = new HashMap<>();
 
     /** 飞书消息 */
-    private Map<String, Object> feishuMessage = new HashMap<>();
+    private Map<String, Object> feishuChat = new HashMap<>();
 
     /** 企业微信机器人 */
-    private Map<String, Object> weixinRobot = new HashMap<>();
+    private Map<String, Object> weixinBot = new HashMap<>();
 
     /** 企业微信消息 */
-    private Map<String, Object> weixinMessage = new HashMap<>();
+    private Map<String, Object> weixinChat = new HashMap<>();
 
     /** 邮件 SMTP */
     private Map<String, Object> mailSmtp = new HashMap<>();

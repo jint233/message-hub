@@ -1,5 +1,6 @@
 package com.message.hub.platform.provider.mail;
 
+import com.message.hub.core.domain.PlatformSendResult;
 import com.message.hub.core.exception.MailMessageException;
 import com.message.hub.core.properties.MailProperties;
 import com.message.hub.platform.context.MarkdownContext;
@@ -24,12 +25,12 @@ public class MailSmtpMessageService extends AbstractSendService<MailProperties.S
      *
      * @param smtp    邮件配置属性
      * @param context 邮件内容上下文
-     * @return 返回发送邮件的结果，通常为一个表示成功或失败的状态码或信息
+     * @return {@link PlatformSendResult } 响应结果
      */
     @Override
-    public String sendMarkdown(MailProperties.Smtp smtp, MarkdownContext context) {
+    public PlatformSendResult sendMarkdown(MailProperties.Smtp smtp, MarkdownContext context) {
         // 根据别名获取邮件接收者地址，将Markdown内容转换为HTML格式，并发送邮件
-        return mail(
+        return this.mail(
                 smtp,
                 (String) context.getContentParams(smtp.getAlias()).getMailSmtp().get("to"),
                 context.getTitle(),
@@ -45,12 +46,12 @@ public class MailSmtpMessageService extends AbstractSendService<MailProperties.S
      *
      * @param smtp    邮件配置属性
      * @param context 邮件内容上下文
-     * @return 返回发送邮件的结果，通常是邮件发送状态的描述
+     * @return {@link PlatformSendResult } 响应结果
      */
     @Override
-    public String sendText(MailProperties.Smtp smtp, TextContext context) {
+    public PlatformSendResult sendText(MailProperties.Smtp smtp, TextContext context) {
         // 从context中获取邮件的收件人地址，并使用smtp和邮件内容调用mail方法发送邮件
-        return mail(
+        return this.mail(
                 smtp,
                 (String) context.getContentParams(smtp.getAlias()).getMailSmtp().get("to"),
                 null,
@@ -65,11 +66,11 @@ public class MailSmtpMessageService extends AbstractSendService<MailProperties.S
      * @param to      收件人邮箱地址，不能为null
      * @param title   邮件主题，不能为null
      * @param content 邮件正文，不能为null
-     * @return 返回发送结果，成功返回"success"
+     * @return {@link PlatformSendResult } 响应结果
      *
      * @throws MailMessageException 如果邮件发送过程中出现任何MessagingException异常，将封装并抛出MailMessageException
      */
-    public String mail(MailProperties.Smtp smtp, String to, String title, String content) {
+    public PlatformSendResult mail(MailProperties.Smtp smtp, String to, String title, String content) {
         // 校验必须的参数信息
         Assert.notNull(smtp.getHost(), "host should not be null!");
         Assert.notNull(smtp.getFrom(), "from should not be null!");
@@ -87,7 +88,12 @@ public class MailSmtpMessageService extends AbstractSendService<MailProperties.S
                     smtp.getPassword(),
                     title, content
             );
-            return "success";
+            return PlatformSendResult.builder()
+                    .alias(smtp.getAlias())
+                    .success(true)
+                    .code("0")
+                    .message("success")
+                    .build();
         } catch (MessagingException e) {
             log.error("mail smtp message send error", e);
             throw new MailMessageException(e.getMessage(), e);

@@ -3,7 +3,7 @@ package com.message.hub.autoconfigure.configuration;
 import com.message.hub.core.exception.MessageException;
 import com.message.hub.core.properties.MessageChannel;
 import com.message.hub.platform.provider.MessageService;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -29,15 +29,20 @@ public class ChannelConfiguration {
      */
     private final int core = Runtime.getRuntime().availableProcessors() + 1;
 
+    /**
+     * 线程池配置
+     *
+     * @return {@link ThreadPoolTaskExecutor } 消息发送自定义线程池
+     */
     @Bean(name = "messageHubTaskExecutor")
-    @ConditionalOnBean(MessageService.class)
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(core);
         executor.setMaxPoolSize(core * 2);
-        executor.setQueueCapacity(1000);
+        executor.setQueueCapacity(2000);
         executor.setKeepAliveSeconds(60);
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        executor.setThreadNamePrefix("message-hub-thread-");
         return executor;
     }
 
@@ -54,7 +59,7 @@ public class ChannelConfiguration {
     @Bean
     @ConditionalOnMissingBean(MessageService.class)
     public MessageService init(final ChannelProperties properties,
-                               final ThreadPoolTaskExecutor messageHubTaskExecutor) {
+                               @Qualifier("messageHubTaskExecutor") final ThreadPoolTaskExecutor executor) {
         // 集合所有消息别名，包括钉钉、飞书、微信、邮件等通道的消息配置
         final List<MessageChannel> channels = new ArrayList<>();
         if (Objects.nonNull(properties.getDingtalk())) {
@@ -78,7 +83,7 @@ public class ChannelConfiguration {
                 throw new MessageException("消息别名重复: " + channel.getAlias());
             }
         }
-        return new MessageService(channels, messageHubTaskExecutor);
+        return new MessageService(channels, executor);
     }
 
     private <T extends MessageChannel> void safeAdd(List<MessageChannel> all, List<T> channels) {

@@ -1,5 +1,6 @@
 package com.message.hub.platform.provider.weixin;
 
+import com.message.hub.core.domain.PlatformSendResult;
 import com.message.hub.core.exception.WeixinMessageException;
 import com.message.hub.core.properties.WeixinProperties;
 import com.message.hub.platform.context.MarkdownContext;
@@ -23,15 +24,14 @@ public class WeixinBotMessageService extends AbstractSendService<WeixinPropertie
      *
      * @param bot     用于配置微信自定义机器人的别名属性，包含关键的访问令牌
      * @param context 要发送的markdown内容
-     * @return 返回从微信服务器接收到的响应信息
+     * @return {@link PlatformSendResult } 响应结果
      */
     @Override
-    public String sendMarkdown(WeixinProperties.Bot bot, MarkdownContext context) {
+    public PlatformSendResult sendMarkdown(WeixinProperties.Bot bot, MarkdownContext context) {
         Assert.notNull(bot.getKey(), "key should not be null!");
         try {
             // 构建向微信自定义机器人发送的消息请求，其中消息类型设定为markdown，内容为传入的markdown格式文本
-            return WeixinUtils.botSend(
-                    bot.getKey(),
+            return WeixinUtils.botSend(bot,
                     WeixinUtils.RobotRequest
                             .builder("markdown")
                             .withMarkdown(ContentUtils.toMarkdown(context))
@@ -48,16 +48,14 @@ public class WeixinBotMessageService extends AbstractSendService<WeixinPropertie
      *
      * @param bot     用于配置微信自定义机器人的别名属性，包含关键的访问令牌
      * @param context 要发送的文本内容
-     * @return 发送结果的字符串反馈
+     * @return {@link PlatformSendResult } 响应结果
      */
     @Override
-    public String sendText(WeixinProperties.Bot bot, TextContext context) {
+    public PlatformSendResult sendText(WeixinProperties.Bot bot, TextContext context) {
         Assert.notNull(bot.getKey(), "key should not be null!");
         try {
             // 构建并发送自定义机器人文本消息
-            return WeixinUtils.botSend(
-                    // 使用别名属性中的关键令牌
-                    bot.getKey(),
+            return WeixinUtils.botSend(bot,
                     WeixinUtils.RobotRequest
                             // 创建消息请求构建器,指定消息类型为文本
                             .builder("text")

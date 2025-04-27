@@ -1,5 +1,6 @@
 package com.message.hub.platform.provider.weixin;
 
+import com.message.hub.core.domain.PlatformSendResult;
 import com.message.hub.core.exception.WeixinMessageException;
 import com.message.hub.core.properties.WeixinProperties;
 import com.message.hub.platform.context.MarkdownContext;
@@ -29,22 +30,20 @@ public class WeixinChatMessageService extends AbstractSendService<WeixinProperti
      *
      * @param chat    微信配置属性，包含企业ID、企业密钥和别名配置的对象，用于认证和指定消息发送的主体
      * @param context Markdown内容及其发送参数的对象
-     * @return 返回发送消息后的响应结果
+     * @return {@link PlatformSendResult } 响应结果
      */
     @Override
-    public String sendMarkdown(WeixinProperties.Chat chat, MarkdownContext context) {
+    public PlatformSendResult sendMarkdown(WeixinProperties.Chat chat, MarkdownContext context) {
         // 确保企业ID和企业密钥不为空
         Assert.notNull(chat.getCorpId(), "corpId should not be null!");
         Assert.notNull(chat.getCorpSecret(), "corpSecret should not be null!");
 
         // 根据别名获取消息参数
-        Map<String, Object> params = context.getContentParams(chat.getAlias()).getWeixinMessage();
+        Map<String, Object> params = context.getContentParams(chat.getAlias()).getWeixinChat();
 
         try {
             // 构建并发送Markdown消息
-            return WeixinUtils.chatSend(
-                    chat.getCorpId(),
-                    chat.getCorpSecret(),
+            return WeixinUtils.chatSend(chat,
                     WeixinUtils.MessageRobotRequest
                             .builder("markdown", chat.getAgentId())
                             .withMarkdown(ContentUtils.toMarkdown(context))
@@ -64,22 +63,20 @@ public class WeixinChatMessageService extends AbstractSendService<WeixinProperti
      *
      * @param chat    微信配置属性，包括企业ID、企业密钥和代理ID等信息
      * @param context 文本消息内容，包括消息文本和别名等信息
-     * @return 返回消息发送结果的字符串表示
+     * @return {@link PlatformSendResult } 响应结果
      */
     @Override
-    public String sendText(WeixinProperties.Chat chat, TextContext context) {
+    public PlatformSendResult sendText(WeixinProperties.Chat chat, TextContext context) {
         // 确保企业ID和企业密钥不为空
         Assert.notNull(chat.getCorpId(), "corpId should not be null!");
         Assert.notNull(chat.getCorpSecret(), "corpSecret should not be null!");
 
         // 根据别名获取消息参数
-        Map<String, Object> params = context.getContentParams(chat.getAlias()).getWeixinMessage();
+        Map<String, Object> params = context.getContentParams(chat.getAlias()).getWeixinChat();
 
         try {
             // 构建并发送Markdown消息
-            return WeixinUtils.chatSend(
-                    chat.getCorpId(),
-                    chat.getCorpSecret(),
+            return WeixinUtils.chatSend(chat,
                     WeixinUtils.MessageRobotRequest
                             .builder("text", chat.getAgentId())
                             .withText(context.getText())

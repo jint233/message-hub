@@ -1,6 +1,8 @@
 package com.message.hub.platform.provider;
 
 import com.google.common.base.Preconditions;
+import com.message.hub.core.domain.PlatformSendResult;
+import com.message.hub.core.domain.SendResult;
 import com.message.hub.core.properties.MessageChannel;
 import com.message.hub.platform.context.MessageContext;
 import lombok.extern.slf4j.Slf4j;
@@ -37,20 +39,21 @@ public class MessageService {
      * @return 发送结果列表，列表中可能包含成功发送的消息或发送失败的错误信息
      */
     @SuppressWarnings("unchecked")
-    public List<String> send(final MessageContext<?> context) {
+    public SendResult send(final MessageContext<?> context) {
         final List<MessageChannel> sendChannels = channels.parallelStream()
                 .filter(channel -> context.getAlias().isEmpty() ||
                         context.getAlias().contains(channel.getAlias()))
                 .filter(channel -> context.getMessageType().isEmpty() ||
                         context.getMessageType().contains(MessageType.getMessageType(channel)))
                 .toList();
-        final CompletableFuture<String>[] futures = sendChannels.stream()
+        final CompletableFuture<PlatformSendResult>[] futures = sendChannels.stream()
                 .map(channel ->
                         CompletableFuture.supplyAsync(() -> MessageDispatcher.run(channel, context), taskExecutor))
                 .toArray(CompletableFuture[]::new);
-        return CompletableFuture.allOf(futures)
+        final List<PlatformSendResult> platformResults = CompletableFuture.allOf(futures)
                 .thenApply(v -> Arrays.stream(futures).map(CompletableFuture::join).toList())
                 .join();
+        return SendResult.warp(platformResults);
     }
 
     /**
@@ -58,7 +61,7 @@ public class MessageService {
      *
      * @param channel 要添加的消息渠道，包含消息的别名等信息。
      */
-    public synchronized void add(final MessageChannel channel) {
+    public synchronized void addChannel(final MessageChannel channel) {
         Preconditions.checkNotNull(channel, "channel must not be null");
         channels.stream()
                 .filter(e -> e.getAlias().equals(channel.getAlias()))
@@ -72,7 +75,7 @@ public class MessageService {
      *
      * @param alias 别名 用于查找和移除消息渠道
      */
-    public synchronized void removeByAlias(final String alias) {
+    public synchronized void removeChannel(final String alias) {
         Preconditions.checkNotNull(alias, "alias must not be null");
         channels.stream()
                 .filter(e -> alias.equals(e.getAlias()))

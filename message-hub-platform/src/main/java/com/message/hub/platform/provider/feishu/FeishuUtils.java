@@ -1,9 +1,12 @@
 package com.message.hub.platform.provider.feishu;
 
+import com.alibaba.fastjson2.JSON;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.message.hub.core.content.SubBoldLine;
 import com.message.hub.core.content.SubLinkLine;
+import com.message.hub.core.domain.PlatformSendResult;
+import com.message.hub.core.properties.FeishuProperties;
 import com.message.hub.core.util.RestClientUtils;
 import com.message.hub.platform.context.MarkdownContext;
 import lombok.NoArgsConstructor;
@@ -25,13 +28,21 @@ public class FeishuUtils {
     /**
      * 向定制机器人发送请求
      *
-     * @param hookId 机器人的hookId，用于标识特定的机器人
-     * @param body   发送给机器人的消息体
-     * @return 返回从机器人接收到的响应内容
+     * @param bot  机器人配置
+     * @param body 发送给机器人的消息体
+     * @return {@link PlatformSendResult } 响应结果
      */
-    public static String feishuBot(String hookId, BotRequest body) {
+    public static PlatformSendResult feishuBot(FeishuProperties.Bot bot, BotRequest body) {
         // 使用RestClientUtils的post方法，向指定webhook地址发送post请求
-        return RestClientUtils.post(String.format(WEBHOOK, hookId), body);
+        final String response = RestClientUtils.post(String.format(WEBHOOK, bot.getHookId()), body);
+        final FeishuBotResponse botResponse = JSON.parseObject(response, FeishuBotResponse.class);
+        return PlatformSendResult.builder()
+                .alias(bot.getAlias())
+                .success(botResponse.success())
+                .code(String.valueOf(botResponse.getCode()))
+                .message(botResponse.getMsg())
+                .detail(response)
+                .build();
     }
 
     /**
@@ -84,7 +95,7 @@ public class FeishuUtils {
             }
 
             public Builder withPost(String title, List<PostContentDetail> content) {
-                Assert.isTrue(!"markdown" .equals(this.options.msgType), " msgType value is not markdown, should not use this method!");
+                Assert.isTrue(!"markdown".equals(this.options.msgType), " msgType value is not markdown, should not use this method!");
                 this.options.content = new PostContent(new Post(new ZhCn(title, content)));
                 return this;
             }
@@ -94,7 +105,7 @@ public class FeishuUtils {
             }
 
             public Builder withText(TextContent text) {
-                Assert.isTrue(!"text" .equals(this.options.msgType), " msgType value is not text, should not use this method!");
+                Assert.isTrue(!"text".equals(this.options.msgType), " msgType value is not text, should not use this method!");
                 this.options.content = text;
                 return this;
             }

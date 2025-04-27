@@ -1,6 +1,7 @@
 package com.message.hub.example.controller;
 
 import com.message.hub.core.content.SubLine;
+import com.message.hub.core.domain.SendResult;
 import com.message.hub.platform.context.MessageContext;
 import com.message.hub.platform.provider.MessageService;
 import com.message.hub.platform.provider.MessageType;
@@ -8,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * 消息发送控制器
@@ -25,7 +24,7 @@ public class MessageSendController {
     private final MessageService messageService;
 
     @GetMapping("/robot/dingtalk")
-    public List<String> dingtalkChannel() {
+    public SendResult dingtalkChannel() {
         return messageService.send(MessageContext.buildMarkdown()
                 .addAlias("dingtalk-bot-1")
                 .addMessageType(MessageType.DingtalkBot)

@@ -1,5 +1,6 @@
 package com.message.hub.platform.provider.feishu;
 
+import com.message.hub.core.domain.PlatformSendResult;
 import com.message.hub.core.exception.FeishuMessageException;
 import com.message.hub.core.properties.FeishuProperties;
 import com.message.hub.platform.context.MarkdownContext;
@@ -30,15 +31,15 @@ public class FeishuBotMessageService extends AbstractSendService<FeishuPropertie
      *
      * @param bot     飞书机器人配置属性
      * @param context Markdown消息上下文
-     * @return 发送消息后的响应结果，通常为一个JSON字符串
+     * @return {@link PlatformSendResult } 响应结果
      */
     @Override
-    public String sendMarkdown(FeishuProperties.Bot bot, MarkdownContext context) {
+    public PlatformSendResult sendMarkdown(FeishuProperties.Bot bot, MarkdownContext context) {
         // 将Markdown内容转换为飞书机器人可接受的格式列表
         List<FeishuUtils.BotRequest.PostContentDetail> list = FeishuUtils.toPost(context);
 
         // 为消息添加@别名的功能
-        context.getContentParams(bot.getAlias()).getFeishuRobot()
+        context.getContentParams(bot.getAlias()).getFeishuBot()
                 .forEach((key, value) ->
                         list.add(new FeishuUtils.BotRequest.PostContentDetail("at", null, null, key, (String) value)));
 
@@ -46,8 +47,7 @@ public class FeishuBotMessageService extends AbstractSendService<FeishuPropertie
         Long timestamp = System.currentTimeMillis();
         try {
             // 构建并发送消息到飞书机器人
-            return FeishuUtils.feishuBot(
-                    bot.getHookId(),
+            return FeishuUtils.feishuBot(bot,
                     FeishuUtils.BotRequest
                             .builder("post", timestamp, sign(timestamp, bot.getSecret()))
                             .withPost(context.getTitle(), list)
@@ -65,21 +65,20 @@ public class FeishuBotMessageService extends AbstractSendService<FeishuPropertie
      *
      * @param bot     飞书机器人的配置属性
      * @param context 文本消息上下文
-     * @return 返回发送消息后的响应结果
+     * @return {@link PlatformSendResult } 响应结果
      *
      * @throws FeishuMessageException 如果在签名算法处理过程中发生异常，则抛出此运行时异常
      */
     @Override
-    public String sendText(FeishuProperties.Bot bot, TextContext context) {
+    public PlatformSendResult sendText(FeishuProperties.Bot bot, TextContext context) {
         Long timestamp = System.currentTimeMillis();
         try {
             // 构建并发送自定义机器人消息请求，其中包含消息的文本内容。
-            return FeishuUtils.feishuBot(
-                    bot.getHookId(),
+            return FeishuUtils.feishuBot(bot,
                     FeishuUtils.BotRequest.builder("text", timestamp, sign(timestamp, bot.getSecret()))
                             .withText(
                                     new FeishuUtils.BotRequest.TextContent(
-                                            context.getContentParams(bot.getAlias()).getFeishuRobot()
+                                            context.getContentParams(bot.getAlias()).getFeishuBot()
                                                     .entrySet()
                                                     .stream()
                                                     .map(entry -> "<at user_id = \"" + entry.getKey() + "\">" + entry.getValue() + "</at>").
