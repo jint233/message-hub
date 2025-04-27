@@ -1,9 +1,9 @@
 package com.message.hub.platform.provider;
 
 import com.google.common.base.Preconditions;
+import com.message.hub.core.properties.MessageChannel;
 import com.message.hub.core.result.PlatformSendResult;
 import com.message.hub.core.result.SendResult;
-import com.message.hub.core.properties.MessageChannel;
 import com.message.hub.platform.context.MessageContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -51,8 +51,7 @@ public class MessageService {
                                 .exceptionally(ex -> {
                                     log.error("Channel {} dispatch failed", channel.getAlias(), ex);
                                     return PlatformSendResult.fail(ex.getMessage());
-                                }).orTimeout(30, TimeUnit.SECONDS)
-                )
+                                }).orTimeout(30, TimeUnit.SECONDS))
                 .toList()
                 .stream()
                 .map(CompletableFuture::join)
