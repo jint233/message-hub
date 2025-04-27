@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 /**
  * REST 请求工具类
  *
- * @author admin
+ * @author jint233
  * @date 2025/04/22
  */
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
@@ -77,7 +77,7 @@ public class RestClientUtils {
      */
     public static <T> T get(String url, Class<T> entityClass) {
         return RestClientUtils.getRestClient()
-                .post()
+                .get()
                 .uri(url)
                 .headers(getJsonContentHeaders())
                 .retrieve()

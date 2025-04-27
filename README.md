@@ -124,7 +124,7 @@ message:
 
 > 企业微信消息需要先注册企业内部应用，应用的配置请参考
 > [基本概念介绍](https://developer.work.weixin.qq.com/document/path/90665)
-> 获得corpId、corpSecret、agentId
+> 获得 corpId、corpSecret、agentId
 
 ```yaml
 message:
@@ -231,9 +231,10 @@ MessageContext.buildMarkdown()
 ###### 3. 飞书机器人支持参数
 
 @所有人
-.addFeishuRobot("all","所有人")
+`.addFeishuRobot("all","所有人")`
+
 @单个用户（填入用户的 Open ID，且必须是有效值，否则取名字展示，并不产生实际的 @ 效果）
-.addFeishuRobot("ou_xxx","名字")
+`.addFeishuRobot("ou_xxx","名字")`
 
 ###### 4. 飞书消息
 
@@ -260,14 +261,12 @@ MessageContext.buildMarkdown()
 |----|--------|-------------|
 | to | String | 收件邮箱1,收件邮箱2 |
 
-## 其他1：动态增减平台信息
+## 其他：动态增减平台信息
 
 ```java
 //可以通过如下方法添加平台信息
-messageService.add();
+messageService.addChannel();
 
 //可以通过如下方法删除平台信息
-messageService.
-
-removeByAlias();
+messageService.removeChannel();
 ```

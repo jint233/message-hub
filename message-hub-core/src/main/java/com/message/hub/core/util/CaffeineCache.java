@@ -11,9 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Caffiene 缓存
+ * Caffeine 缓存
  *
- * @author admin
+ * @author jint233
  * @date 2025/04/22
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

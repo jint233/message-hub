@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 /**
  * 消息内容工具类
  *
- * @author admin
+ * @author jint233
  * @date 2025/04/22
  */
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)

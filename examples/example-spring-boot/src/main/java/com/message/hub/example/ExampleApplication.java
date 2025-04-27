@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * Spring Boot 应用程序示例
  *
- * @author admin
+ * @author jint233
  * @date 2025/04/23
  */
 @EnableMessageHub

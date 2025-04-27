@@ -3,7 +3,7 @@ package com.message.hub.core.content;
 /**
  * 行内容枚举
  *
- * @author admin
+ * @author jint233
  * @date 2025/04/22
  */
 public enum SubLineEnum {

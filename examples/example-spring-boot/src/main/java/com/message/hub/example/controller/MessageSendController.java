@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 消息发送控制器
  *
- * @author admin
+ * @author jint233
  * @date 2025/04/23
  */
 @RestController

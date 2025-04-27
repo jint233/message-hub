@@ -13,7 +13,7 @@ import org.springframework.util.Assert;
 /**
  * 微信机器人服务实现
  *
- * @author admin
+ * @author jint233
  * @date 2025/04/22
  */
 @Slf4j

@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 微信消息发送响应结果
  *
- * @author admin
+ * @author jint233
  * @date 2025/04/27
  */
 @Data

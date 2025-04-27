@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * 消息类型
  *
- * @author admin
+ * @author jint233
  * @date 2025/04/22
  */
 public enum MessageType {

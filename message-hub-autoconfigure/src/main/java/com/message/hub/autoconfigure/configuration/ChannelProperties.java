@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 /**
  * 消息服务属性配置
  *
- * @author admin
+ * @author jint233
  * @date 2025/04/22
  */
 @Data

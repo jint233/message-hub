@@ -1,6 +1,9 @@
 spring:
   application:
     name: example-spring-boot
+logging:
+  level:
+    com.message.hub: debug
 message:
   hub:
     dingtalk:

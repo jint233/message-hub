@@ -8,7 +8,7 @@ import com.message.hub.platform.context.TextContext;
 /**
  * 消息发送服务
  *
- * @author admin
+ * @author jint233
  * @date 2025/04/22
  */
 public interface ISendService<T extends MessageChannel> {

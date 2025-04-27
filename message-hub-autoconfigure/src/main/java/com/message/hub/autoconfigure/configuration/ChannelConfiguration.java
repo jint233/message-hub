@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  * 消息服务配置
  *
- * @author admin
+ * @author jint233
  * @date 2025/04/22
  */
 @Configuration
@@ -58,8 +58,8 @@ public class ChannelConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(MessageService.class)
-    public MessageService init(final ChannelProperties properties,
-                               @Qualifier("messageHubTaskExecutor") final ThreadPoolTaskExecutor executor) {
+    public MessageService init(@Qualifier("messageHubTaskExecutor") final ThreadPoolTaskExecutor executor,
+                               final ChannelProperties properties) {
         // 集合所有消息别名，包括钉钉、飞书、微信、邮件等通道的消息配置
         final List<MessageChannel> channels = new ArrayList<>();
         if (Objects.nonNull(properties.getDingtalk())) {
@@ -80,7 +80,7 @@ public class ChannelConfiguration {
         final Set<String> aliases = new HashSet<>((int) (channels.size() / 0.75 + 1));
         for (MessageChannel channel : channels) {
             if (!aliases.add(channel.getAlias())) {
-                throw new MessageException("消息别名重复: " + channel.getAlias());
+                throw new MessageException("消息通道别名重复: " + channel.getAlias());
             }
         }
         return new MessageService(channels, executor);

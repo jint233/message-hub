@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 /**
  * 启用聚合消息发送服务
  *
- * @author admin
+ * @author jint233
  */
 @Documented
 @Target({ElementType.TYPE})

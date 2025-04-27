@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 钉钉消息配置
  *
- * @author admin
+ * @author jint233
  * @date 2025/04/22
  */
 @Data

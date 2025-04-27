@@ -9,7 +9,7 @@ import com.message.hub.platform.context.TextContext;
 /**
  * 消息发送服务抽象类
  *
- * @author admin
+ * @author jint233
  * @date 2025/04/22
  */
 public abstract class AbstractSendService<T extends MessageChannel> implements ISendService<T> {
